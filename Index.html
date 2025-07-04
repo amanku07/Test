@@ -1,119 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>All Products</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .skeleton {
-      background: linear-gradient(90deg, #f0f0f0 25%, #e2e2e2 50%, #f0f0f0 75%);
-      background-size: 200% 100%;
-      animation: skeleton-loading 1.2s infinite linear;
-    }
-    @keyframes skeleton-loading {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-    .card-img {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-    }
-  </style>
-</head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
-  <!-- Header -->
-  <header class="relative bg-gray-900 h-[355px] flex items-center justify-center text-white">
-    <img src="https://cdn.shopify.com/s/files/1/0708/6014/4898/files/Main_b9e0da7f-db89-4d41-83f0-7f417b02831d.jpg" alt="" class="absolute inset-0 w-full h-full object-cover opacity-30" />
-    <h1 class="relative text-4xl font-extrabold">All Products</h1>
-  </header>
-
-  <!-- Main Content -->
-  <main class="flex-grow container mx-auto px-4 py-6">
-    <div class="flex justify-between items-center mb-4">
-      <p id="product-count" class="text-gray-700 font-medium">Loading products...</p>
-      <select id="sort" class="border rounded px-3 py-2">
-        <option value="default">Price, Low to High</option>
-        <option value="high">Price, High to Low</option>
-      </select>
-    </div>
-    <div id="grid" class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-      <!-- Product Cards -->
-    </div>
-  </main>
-
-  <!-- JavaScript -->
-  <script>
-    const API_URL = 'https://interveiw-mock-api.vercel.app/api/getProducts';
-    const grid = document.getElementById('grid');
-    const countEl = document.getElementById('product-count');
-  
-    function showSkeletons(count = 6) {
-      grid.innerHTML = '';
-      for (let i = 0; i < count; i++) {
-        const card = document.createElement('div');
-        card.className = 'bg-white rounded shadow p-4 animate-pulse';
-        card.innerHTML = `
-          <div class="bg-gray-300 h-40 mb-4 rounded"></div>
-          <div class="bg-gray-300 h-4 w-3/4 mb-2 rounded"></div>
-          <div class="bg-gray-300 h-4 w-1/2 mb-2 rounded"></div>
-          <div class="bg-gray-300 h-10 rounded"></div>
-        `;
-        grid.appendChild(card);
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Products</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          #f0f0f0 25%,
+          #e2e2e2 50%,
+          #f0f0f0 75%
+        );
+        background-size: 200% 100%;
+        animation: skeleton-loading 1.2s infinite linear;
       }
-    }
-    function renderCards(products) {
-        grid.innerHTML = '';
-        countEl.textContent = ${products.length} Products;
-      
-        products.forEach(product => {
-          if (!product || !product.variants || !product.image) return;
-      
-          const img = product.image?.src || '';
-          const price = product.variants?.[0]?.price || '0';
-          const currency = product.variants?.[0]?.price_currency || 'INR';
-          const title = product.title || 'No Title';
-      
-          const card = document.createElement('div');
-          card.className = 'bg-white rounded-lg shadow hover:shadow-lg transition flex flex-col';
+      @keyframes skeleton-loading {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+      .card-img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 min-h-screen flex flex-col">
+    <!-- Header -->
+    <header
+      class="relative bg-gray-900 h-[355px] flex items-center justify-center text-white"
+    >
+      <img
+        src="https://cdn.shopify.com/s/files/1/0708/6014/4898/files/Main_b9e0da7f-db89-4d41-83f0-7f417b02831d.jpg"
+        alt=""
+        class="absolute inset-0 w-full h-full object-cover opacity-30"
+      />
+      <h1 class="relative text-4xl font-extrabold">All Products</h1>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-6">
+      <div class="flex justify-between items-center mb-4">
+        <p id="product-count" class="text-gray-700 font-medium">
+          Loading products...
+        </p>
+        <select id="sort" class="border rounded px-3 py-2">
+          <option value="default">Price, Low to High</option>
+          <option value="high">Price, High to Low</option>
+        </select>
+      </div>
+      <div
+        id="grid"
+        class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+      >
+        <!-- Product Cards -->
+      </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+      const API_URL = "https://interveiw-mock-api.vercel.app/api/getProducts";
+      const grid = document.getElementById("grid");
+      const countEl = document.getElementById("product-count");
+
+      function showSkeletons(count = 6) {
+        grid.innerHTML = "";
+        for (let i = 0; i < count; i++) {
+          const card = document.createElement("div");
+          card.className = "bg-white rounded shadow p-4 animate-pulse";
           card.innerHTML = `
-            <img src="${img}" alt="${title}" class="card-img rounded-t">
-            <div class="p-4 flex flex-col flex-grow">
-              <h3 class="font-semibold mb-2 line-clamp-2">${title}</h3>
-              <p class="text-xl font-bold text-gray-550 mb-4">${currency} ${price}</p>
-              <button class="bg-blue-900 text-white py-2 rounded mt-auto hover:bg-blue-900">ADD TO CART</button>
-            </div>
+            <div class="bg-gray-300 h-40 mb-4 rounded"></div>
+            <div class="bg-gray-300 h-4 w-3/4 mb-2 rounded"></div>
+            <div class="bg-gray-300 h-4 w-1/2 mb-2 rounded"></div>
+            <div class="bg-gray-300 h-10 rounded"></div>
           `;
+          grid.appendChild(card);
+        }
+      }
+      function renderCards(products) {
+        grid.innerHTML = "";
+        countEl.textContent = `${products.length} Products`;
+
+        products.forEach((product) => {
+          if (!product || !product.variants || !product.image) return;
+
+          const img = product.image?.src || "";
+          const price = product.variants?.[0]?.price || "0";
+          const currency = product.variants?.[0]?.price_currency || "INR";
+          const title = product.title || "No Title";
+
+          const card = document.createElement("div");
+          card.className =
+            "bg-white rounded-lg shadow hover:shadow-lg transition flex flex-col";
+          card.innerHTML = `
+              <img src="${img}" alt="${title}" class="card-img rounded-t">
+              <div class="p-4 flex flex-col flex-grow">
+                <h3 class="font-semibold mb-2 line-clamp-2">${title}</h3>
+                <p class="text-xl font-bold text-gray-550 mb-4">${currency} ${price}</p>
+                <button class="bg-blue-900 text-white py-2 rounded mt-auto hover:bg-blue-900">ADD TO CART</button>
+              </div>
+            `;
           grid.appendChild(card);
         });
       }
-      
-    async function loadProducts() {
+
+      async function loadProducts() {
         try {
           showSkeletons();
-      
+
           const res = await fetch(API_URL);
           const result = await res.json();
-      
+
           // ✅ Correct shape: object with data key
           if (!Array.isArray(result.data)) {
-            throw new Error('Data is not an array');
+            throw new Error("Data is not an array");
           }
-      
-          const products = result.data.map(item => item.product);
-      
+
+          const products = result.data.map((item) => item.product);
+
           renderCards(products);
         } catch (err) {
-          console.error('Error loading products:', err);
-          countEl.textContent = 'Failed to load products.';
-          grid.innerHTML = '<p class="text-center text-red-500">Something went wrong loading products.</p>';
+          console.error("Error loading products:", err);
+          countEl.textContent = "Failed to load products.";
+          grid.innerHTML =
+            '<p class="text-center text-red-500">Something went wrong loading products.</p>';
         }
       }
-      
-  
-    document.addEventListener('DOMContentLoaded', loadProducts);
-  </script>
-  
-</body>
+
+      document.addEventListener("DOMContentLoaded", loadProducts);
+    </script>
+  </body>
 </html>
